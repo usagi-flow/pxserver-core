@@ -1,0 +1,22 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"noImplicitAny": true,
+		"removeComments": true,
+		"moduleResolution": "node"
+	},
+	"paths": {
+		"*": [
+			"node_modules/*"
+		]
+	},
+	"include": [
+		"server/**/*.ts"
+	],
+	"exclude": [
+		"server/test.ts",
+		"server/**/*.spec.ts",
+		"node_modules"
+	]
+}

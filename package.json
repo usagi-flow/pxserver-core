@@ -1,0 +1,36 @@
+{
+	"name": "pxserver-core",
+	"version": "1.0.0",
+	"description": "pxserver",
+	"author": "etienne-k",
+	"license": "GPL-3.0-or-later",
+	"main": "lib/module",
+	"module": "lib/module",
+	"scripts": {
+		"start": "node lib/main",
+		"watch": "concurrently -n \"build,runtime\" \"webpack --watch\" \"nodemon lib/main\"",
+		"build": "webpack",
+		"clean": "rm -rf dist lib"
+	},
+	"files": [
+		"lib/**/*",
+		"webpack.*",
+		"tsconfig.*"
+	],
+	"dependencies": {
+		"express": "^4.17.1"
+	},
+	"devDependencies": {
+		"@types/express": "^4.16.1",
+		"@types/node": "^11.9.6",
+		"@types/webpack": "^4.41.0",
+		"concurrently": "^5.0.0",
+		"nodemon": "^2.0.1",
+		"ts-loader": "^6.2.1",
+		"ts-node": "^8.5.0",
+		"typescript": "^3.7.0",
+		"webpack": "^4.41.2",
+		"webpack-cli": "^3.3.10",
+		"webpack-node-externals": "^1.7.2"
+	}
+}
