@@ -13,21 +13,24 @@ export class WebpackConfiguration
 	protected readonly serverSourceDirectory : string = "server";
 
 	protected application : boolean = true;
+	protected library : boolean = false;
 
 	public setLibrary() : WebpackConfiguration
 	{
 		this.application = false;
+		this.library = true;
 		return this;
 	}
 
 	public isLibrary() : boolean
 	{
-		return !this.application;
+		return this.library;
 	}
 
 	public setApplication() : WebpackConfiguration
 	{
 		this.application = true;
+		this.library = false;
 		return this;
 	}
 
@@ -36,9 +39,21 @@ export class WebpackConfiguration
 		return this.application;
 	}
 
+	public setHybrid() : WebpackConfiguration
+	{
+		this.application = true;
+		this.library = true;
+		return this;
+	}
+
+	public isHybrid() : boolean
+	{
+		return this.application && this.library;
+	}
+
 	public getOutputDirectory() : string
 	{
-		return path.resolve(".", this.application ? this.appOutputDirectory : this.libOutputDirectory);
+		return path.resolve(".", this.isLibrary() ? this.libOutputDirectory : this.appOutputDirectory);
 	}
 
 	public getServerEntry() : webpack.Entry
@@ -46,9 +61,10 @@ export class WebpackConfiguration
 		let entry : webpack.Entry = {};
 
 		if (this.isApplication())
-			entry["Server"] = this.getPath("./server/main.ts");
-		else
-			entry["Server"] = this.getPath("./server/module.ts");
+			entry["main"] = this.getPath("./server/main.ts");
+
+		if (this.isLibrary())
+			entry["module"] = this.getPath("./server/module.ts");
 
 		return entry;
 	}
@@ -58,19 +74,9 @@ export class WebpackConfiguration
 		let output : webpack.Output = {};
 
 		output.path = this.getOutputDirectory();
-
-		if (this.isApplication())
-		{
-			output.filename = "main.js";
-			output.library = "main";
-			output.libraryTarget = "umd";
-		}
-		else
-		{
-			output.filename = "module.js";
-			output.library = "module";
-			output.libraryTarget = "umd";
-		}
+		output.filename = "[name].js";
+		output.library = "[name]";
+		output.libraryTarget = "umd";
 
 		return output;
 	}
@@ -116,6 +122,12 @@ export class WebpackConfiguration
 			},
 			externals: [externals()]
 		};
+	}
+
+	public dump() : WebpackConfiguration
+	{
+		console.log(util.inspect(this.get(), undefined, null, true));
+		return this;
 	}
 
 	public get() : webpack.Configuration[]
