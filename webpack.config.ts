@@ -90,13 +90,9 @@ export class WebpackConfiguration
 							{
 								loader: "ts-loader",
 								options: {
-									//context: __dirname,
-									configFile: this.getBasePath("tsconfig.server.json"),
+									configFile: "tsconfig.server.json",
 									compilerOptions: {
 										baseUrl: path.resolve("."),
-										//include: [
-										//	path.join(this.serverSourceDirectory , "**/*.ts")
-										//],
 										outDir: this.getOutputDirectory()
 									}
 								}
@@ -147,9 +143,5 @@ export class WebpackConfiguration
 		return path.resolve(__dirname, relativePath);
 	}
 }
-
-let config : webpack.Configuration = new WebpackConfiguration().setLibrary().get()[0];
-
-console.log(util.inspect(config, undefined, 16, true));
 
 export default new WebpackConfiguration().setLibrary().get();
