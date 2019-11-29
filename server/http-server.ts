@@ -1,9 +1,7 @@
-"use strict";
-
 import * as fs from "fs";
 import * as path from "path";
 import * as http from "http";
-import express from "express";
+import * as express from "express";
 
 import Model from "./model";
 import IndexRoute from "./routes/index-route";
@@ -22,7 +20,7 @@ export default class HTTPServer
 	private constructor(root : string, port : number)
 	{
 		console.log("Initializing server");
-		this.express = express.application;
+		this.express = express.default();
 		this.httpServer = http.createServer(this.express);
 		this.model = new Model();
 		this.root = root;
@@ -52,9 +50,8 @@ export default class HTTPServer
 
 		this.express.set("port", this.port);
 
-		this.httpServer = http.createServer(this.express);
-		this.httpServer.on("listening", this.onListening);
-		this.httpServer.on("error", this.onError);
+		this.httpServer.on("listening", this.onListening.bind(this));
+		this.httpServer.on("error", this.onError.bind(this));
 
 		console.log("Server directory: " + this.root);
 		fs.readdirSync(this.root).forEach(file => console.log("- " + file));

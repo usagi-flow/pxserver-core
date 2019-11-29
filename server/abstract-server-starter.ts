@@ -54,6 +54,34 @@ export default abstract class AbstractServerStarter
 		});*/
 	}
 
+	private connectToBackend()
+	{
+		console.log("Connecting to the backend");
+
+		/*this.redisIn = redis.createClient(ServerStarter.SOCKET);
+
+		this.redisIn.on("ready", () => {
+			if (!this.redisIn) return;
+			this.redisInReady = true;
+			console.log("Subscribing");
+			this.redisIn.subscribe("backend-to-frontend:pxserver");
+		});
+		this.redisIn.on("message", (channel : string, message : string) => {
+			console.log("Channel <" + channel + ">: " + message);
+		});
+
+		this.redisOut = redis.createClient(ServerStarter.SOCKET);
+		this.redisOut.on("ready", () => {
+			if (!this.redisOut) return;
+			this.redisOutReady = true;
+			setTimeout(() => {
+				if (!this.redisOut) return;
+				console.log("Sending a message");
+				this.redisOut.publish("frontend-to-backend:pxserver", "Hello from Frontend!");
+			}, 3000)
+		});*/
+	}
+
 	protected startHTTPServer() : void
 	{
 		let port : number = process.env.PORT ? Number.parseInt(process.env.PORT) : 3000;

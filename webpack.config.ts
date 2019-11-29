@@ -69,6 +69,16 @@ export class WebpackConfiguration
 		return entry;
 	}
 
+	public getClientEntry() : webpack.Entry
+	{
+		let entry : webpack.Entry = {};
+
+		entry["polyfills"] = this.getPath("./client/polyfills.ts");
+		entry["app"] = this.getPath("./client/main.ts");
+
+		return entry;
+	}
+
 	protected getServerOutput() : webpack.Output
 	{
 		let output : webpack.Output = {};
@@ -77,6 +87,17 @@ export class WebpackConfiguration
 		output.filename = "[name].js";
 		output.library = "[name]";
 		output.libraryTarget = "umd";
+
+		return output;
+	}
+
+	protected getClientOutput() : webpack.Output
+	{
+		let output : webpack.Output = {};
+
+		output.path = path.resolve(".", this.getOutputDirectory(), "public");
+		output.filename = "[name].bundle.js";
+		output.chunkFilename = "[name].bundle.js";
 
 		return output;
 	}
