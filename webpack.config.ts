@@ -15,6 +15,14 @@ export class WebpackConfiguration
 	protected application : boolean = true;
 	protected library : boolean = false;
 
+	private searchPath : Array<string>;
+
+	public constructor()
+	{
+		this.searchPath = new Array();
+		this.extendSearchPath(__dirname);
+	}
+
 	public setLibrary() : WebpackConfiguration
 	{
 		this.application = false;
@@ -157,23 +165,35 @@ export class WebpackConfiguration
 	}
 
 	/**
-	 * Returns the given relative path to an existing file in the application directory,
-	 * or falls back to a path to the same file in the library.
+	 * Extends the search path with the specified path. The specified path will be added with the highest
+	 * priority, meaning that searches will hit the added path before hitting previously added paths.
 	 */
-	protected getPath(relativePath : string) : string
+	public extendSearchPath(path : string) : WebpackConfiguration
 	{
-		if (fs.existsSync(relativePath))
-			return relativePath;
-		else
-			return this.getBasePath(relativePath);
+		this.searchPath.push(path);
+
+		return this;
 	}
 
 	/**
-	 * Returns the absolte path to the file in the core library, specified by the given relative path.
+	 * Returns the given relative path to an existing file in the application directory,
+	 * or falls back to a path in a dependeny directory, according to the search path.
 	 */
-	protected getBasePath(relativePath : string) : string
+	protected getPath(relativePath : string) : string
 	{
-		return path.resolve(__dirname, relativePath);
+		let resolvedPath;
+
+		if (fs.existsSync(relativePath))
+			return relativePath;
+
+		for (let i = this.searchPath.length - 1; i >= 0; --i)
+		{
+			resolvedPath = path.resolve(this.searchPath[i], relativePath);
+			if (fs.existsSync(resolvedPath))
+				return resolvedPath;
+		}
+
+		return relativePath;
 	}
 }
 
